@@ -57,163 +57,81 @@ Abra `nano core/templates/core/index.html` e cole o código gigante definitivo:
 ```html
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
+<head>
+    <meta charset="UTF-8">
     <title>Minha Vitrine Amazon EC2 com Busca Inteligente</title>
     <style>
-      body {
-        font-family: "Segoe UI", Arial, sans-serif;
-        background-color: #2c3e50;
-        text-align: center;
-        padding: 50px;
-      }
-      .caixa {
-        background: #ecf0f1;
-        padding: 40px;
-        border-radius: 12px;
-        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
-        display: inline-block;
-        max-width: 800px;
-        text-align: left;
-        width: 100%;
-      }
-      h1 {
-        color: #2980b9;
-        text-align: center;
-      }
-      p {
-        color: #34495e;
-        font-size: 18px;
-        text-align: center;
-      }
-      .vitrine {
-        margin-top: 30px;
-        border-top: 3px solid #bdc3c7;
-        padding-top: 20px;
-      }
-      .produto-card {
-        background: white;
-        border-left: 5px solid #27ae60;
-        padding: 15px;
-        margin-bottom: 15px;
-        border-radius: 4px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      }
-      .preco {
-        font-size: 22px;
-        color: #27ae60;
-        font-weight: bold;
-      }
-      .esgotado {
-        border-left-color: #e74c3c;
-      }
-      .esgotado .preco {
-        color: #e74c3c;
-      }
-
-      /* NOVO ESTILO BONITO DA BARRA DE BUSCA */
-      .area-busca {
-        background: #34495e;
-        padding: 20px;
-        border-radius: 8px;
-        margin: 20px 0;
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-      }
-      .input-busca {
-        flex: 1;
-        padding: 12px;
-        font-size: 16px;
-        border: none;
-        border-radius: 4px;
-        outline: none;
-        width: 100%;
-      }
-      .btn-busca {
-        background: #2980b9;
-        color: white;
-        border: none;
-        padding: 12px 25px;
-        font-size: 16px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: bold;
-        transition: 0.3s;
-      }
-      .btn-busca:hover {
-        background: #1f618d;
-      }
-      .mensagem-erro {
-        text-align: center;
-        color: #e74c3c;
-        font-size: 20px;
-        padding: 30px;
-      }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #2c3e50; text-align: center; padding: 50px; }
+        .caixa { background: #ecf0f1; padding: 40px; border-radius: 12px; box-shadow: 0px 4px 15px rgba(0,0,0,0.3); display: inline-block; max-width: 800px; text-align: left; width: 100%;}
+        h1 { color: #2980b9; text-align: center;}
+        p { color: #34495e; font-size: 18px; text-align: center;}
+        .vitrine { margin-top: 30px; border-top: 3px solid #bdc3c7; padding-top: 20px;}
+        .produto-card { background: white; border-left: 5px solid #27ae60; padding: 15px; margin-bottom: 15px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .preco { font-size: 22px; color: #27ae60; font-weight: bold; }
+        .esgotado { border-left-color: #e74c3c; }
+        .esgotado .preco { color: #e74c3c; }
+        
+        /* NOVO ESTILO BONITO DA BARRA DE BUSCA */
+        .area-busca { background: #34495e; padding: 20px; border-radius: 8px; margin: 20px 0; display: flex; gap: 10px; justify-content: center;}
+        .input-busca { flex: 1; padding: 12px; font-size: 16px; border: none; border-radius: 4px; outline: none; width: 100%;}
+        .btn-busca { background: #2980b9; color: white; border: none; padding: 12px 25px; font-size: 16px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.3s;}
+        .btn-busca:hover { background: #1f618d; }
+        .mensagem-erro { text-align: center; color: #e74c3c; font-size: 20px; padding: 30px; }
     </style>
-  </head>
-  <body>
+</head>
+<body>
+
     <div class="caixa">
-      <h1>Lojinha do Amazon EC2</h1>
+        <h1>Lojinha do Amazon EC2</h1>
+        
+        <!-- ============================================== -->
+        <!-- O SEGREDO DO GET: NOSSA BARRA DE BUSCA NA TELA -->
+        <!-- ============================================== -->
+        <form method="GET" class="area-busca">
+            <!-- Aquele campo mágico HTML que engole o nome para a URL -->
+            <!-- O default_if_none garante que ele não imprima o termo de programaçao na tela na primeira visita limpa do usuário -->
+            <input type="text" name="busca_do_usuario" class="input-busca" placeholder="Busque nossos produtos pelo nome..." value="{{ palavra_pesquisada|default_if_none:'' }}">
+            <button type="submit" class="btn-busca">🔍 Buscar</button>
+        </form>
 
-      <!-- ============================================== -->
-      <!-- O SEGREDO DO GET: NOSSA BARRA DE BUSCA NA TELA -->
-      <!-- ============================================== -->
-      <form method="GET" class="area-busca">
-        <!-- Aquele campo mágico HTML que engole o nome para a URL -->
-        <!-- O default_if_none garante que ele não imprima o termo de programaçao na tela na primeira visita limpa do usuário -->
-        <input
-          type="text"
-          name="busca_do_usuario"
-          class="input-busca"
-          placeholder="Busque nossos produtos pelo nome..."
-          value="{{ palavra_pesquisada|default_if_none:'' }}"
-        />
-        <button type="submit" class="btn-busca">🔍 Buscar</button>
-      </form>
+        <div class="vitrine">
+            <h2>Nosso Estoque Atual:</h2>
+            
+            <!-- INÍCIO DA MÁGICA: VERIFICA SE DEU RESULTADO OU SE TA ZERADO (Len == 0) -->
+            {% if lista_de_produtos %}
 
-      <div class="vitrine">
-        <h2>Nosso Estoque Atual:</h2>
+                {% for produto in lista_de_produtos %}
+                    {% if produto.em_estoque %}
+                    <div class="produto-card">
+                        <h3 style="margin: 0; color: #2c3e50;">{{ produto.nome }}</h3>
+                        <div class="preco">R$ {{ produto.preco }}</div>
+                        <div style="color: #27ae60; font-weight: bold; margin-top: 5px;"> Em Estoque</div>
+                    </div>
+                    {% else %}
+                    <div class="produto-card esgotado">
+                        <h3 style="margin: 0; color: #2c3e50;">{{ produto.nome }}</h3>
+                        <div class="preco">R$ {{ produto.preco }}</div>
+                        <div style="color: #e74c3c; font-weight: bold; margin-top: 5px;"> Esgotado</div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
 
-        <!-- INÍCIO DA MÁGICA: VERIFICA SE DEU RESULTADO OU SE TA ZERADO (Len == 0) -->
-        {% if lista_de_produtos %} {% for produto in lista_de_produtos %} {% if
-        produto.em_estoque %}
-        <div class="produto-card">
-          <h3 style="margin: 0; color: #2c3e50;">{{ produto.nome }}</h3>
-          <div class="preco">R$ {{ produto.preco }}</div>
-          <div style="color: #27ae60; font-weight: bold; margin-top: 5px;">
-            ✅ Em Estoque
-          </div>
+            {% else %}
+            
+                <!-- E SE O CLIENTE BUSCOU E NÃO ACHOU NADA QUE BATE IGUAL NA LÓGICA DO icontains? O DJANGO CAI AQUI AUTOMATICAMENTE -->
+                <div class="mensagem-erro">
+                    <p>Poxa...</p>
+                    <p>Não encontramos nenhum produto no nosso estoque chamado <strong>"{{ palavra_pesquisada }}"</strong>.</p>
+                    <a href="/" style="display:inline-block; margin-top: 15px; color: #2980b9; text-decoration: none; font-weight:bold;">Limpar Filtro de Busca</a>
+                </div>
+                
+            {% endif %}
+            <!-- FIM DO LOOP -->
+
         </div>
-        {% else %}
-        <div class="produto-card esgotado">
-          <h3 style="margin: 0; color: #2c3e50;">{{ produto.nome }}</h3>
-          <div class="preco">R$ {{ produto.preco }}</div>
-          <div style="color: #e74c3c; font-weight: bold; margin-top: 5px;">
-            Esgotado
-          </div>
-        </div>
-        {% endif %} {% endfor %} {% else %}
-
-        <!-- E SE O CLIENTE BUSCOU E NÃO ACHOU NADA QUE BATE IGUAL NA LÓGICA DO icontains? O DJANGO CAI AQUI AUTOMATICAMENTE -->
-        <div class="mensagem-erro">
-          <p>Poxa...</p>
-          <p>
-            Não encontramos nenhum produto no nosso estoque chamado
-            <strong>"{{ palavra_pesquisada }}"</strong>.
-          </p>
-          <a
-            href="/"
-            style="display:inline-block; margin-top: 15px; color: #2980b9; text-decoration: none; font-weight:bold;"
-            >Limpar Filtro de Busca</a
-          >
-        </div>
-
-        {% endif %}
-        <!-- FIM DO LOOP -->
-      </div>
     </div>
-  </body>
+
+</body>
 </html>
 ```
 
